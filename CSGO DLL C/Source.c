@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <Windows.h>
 
 const int dwForceJump = 0x524F21C;
 const int dwLocalPlayer = 0xD8C2CC;
 const int m_lifeState = 0x25F;
 const int m_fFlags = 0x104;
+const int m_bSpotted = 0x93D;
+const int dwEntityList = 0x4DA542C;
 #define FL_ONGROUND (1 << 0)
 
 enum LifeState
@@ -25,11 +28,18 @@ int Main(HMODULE hMod)
 	{
 		int localPlayer = *(int*)(client + dwLocalPlayer);
 		int playerState = *(int*)(localPlayer + m_lifeState);
-		BYTE flags = *(BYTE*)(localPlayer + m_fFlags);
+
+		BYTE flags = *(BYTE*)(localPlayer + m_fFlags);					// Bunnyhop
 
 		if (playerState == LIFE_ALIVE)
 			if (GetAsyncKeyState(VK_SPACE) && flags & FL_ONGROUND)
 				*(int*)(client + dwForceJump) = 6;
+
+		for (int i = 1; i < 64; i++)									// Radarhack
+		{
+			int ent = *(int*)((client + dwEntityList) + i * 0x10);
+			if (ent != NULL) *(bool*)(ent + m_bSpotted) = 1;
+		}
 
 		Sleep(5);
 	}
@@ -37,7 +47,7 @@ int Main(HMODULE hMod)
 	FreeLibraryAndExitThread(hMod, EXIT_SUCCESS);
 }
 
-BOOL APIENTRY DllMain(HMODULE hMod, intptr_t dwReason, LPVOID lpReserved)
+BOOL APIENTRY DllMain(HMODULE hMod, int dwReason, LPVOID lpReserved)
 {
 	if (dwReason == DLL_PROCESS_ATTACH)
 	{
