@@ -33,6 +33,9 @@ enum LifeState
 
 void ScanPatterns()
 {
+	// Credits for the patterns goes to https://github.com/frk1/hazedumper
+	// My pattern formatting script: https://pastebin.com/cKQAf6WE
+
 	dwForceJump = Scan("client.dll", "\x8B\x0D\x00\x00\x00\x00\x8B\xD6\x8B\xC1\x83\xCA\x02", "xx????xxxxxxx", 2, 0);
 	dwForceAttack = Scan("client.dll", "\x89\x0D\x00\x00\x00\x00\x8B\x0D\x00\x00\x00\x00\x8B\xF2\x8B\xC1\x83\xCE\x04", "xx????xx????xxxxxxx", 2, 0);
 	dwLocalPlayer = Scan("client.dll", "\x8D\x34\x85\x00\x00\x00\x00\x89\x15\x00\x00\x00\x00\x8B\x41\x08\x8B\x48\x04\x83\xF9\xFF", "xxx????xx????xxxxxxxxx", 3, 4);
