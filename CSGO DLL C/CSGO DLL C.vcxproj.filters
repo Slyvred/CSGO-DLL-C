@@ -18,5 +18,13 @@
     <ClCompile Include="Source.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Pattern scanner.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Pattern scanner.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,11 +2,15 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <Windows.h>
+#include "Pattern scanner.h"
 
-const int dwForceJump = 0x524F20C;
-const int dwForceAttack = 0x31D59A4;
-const int dwLocalPlayer = 0xD8C2CC;
-const int dwEntityList = 0x4DA541C;
+// Signatures (these change regularly so we need to dynamically find them)
+int dwForceJump;
+int dwForceAttack;
+int dwLocalPlayer;
+int dwEntityList;
+
+// Netvars (they almost never change)
 const int m_lifeState = 0x25F;
 const int m_fFlags = 0x104;
 const int m_bSpotted = 0x93D;
@@ -26,6 +30,14 @@ enum LifeState
 	LIFE_RESPAWNABLE,
 	LIFE_DISCARDBODY
 };
+
+void ScanPatterns()
+{
+	dwForceJump = Scan("client.dll", "\x8B\x0D\x00\x00\x00\x00\x8B\xD6\x8B\xC1\x83\xCA\x02", "xx????xxxxxxx", 2, 0);
+	dwForceAttack = Scan("client.dll", "\x89\x0D\x00\x00\x00\x00\x8B\x0D\x00\x00\x00\x00\x8B\xF2\x8B\xC1\x83\xCE\x04", "xx????xx????xxxxxxx", 2, 0);
+	dwLocalPlayer = Scan("client.dll", "\x8D\x34\x85\x00\x00\x00\x00\x89\x15\x00\x00\x00\x00\x8B\x41\x08\x8B\x48\x04\x83\xF9\xFF", "xxx????xx????xxxxxxxxx", 3, 4);
+	dwEntityList = Scan("client.dll", "\xBB\x00\x00\x00\x00\x83\xFF\x01\x0F\x8C\x00\x00\x00\x00\x3B\xF8", "x????xxxxx????xx", 1, 0);
+}
 
 void Bunnyhop(bool enable)
 {
@@ -77,6 +89,7 @@ int Main(HMODULE hMod)
 {
 	// Grabbing client.dll base address
 	client = (int)GetModuleHandle("client.dll");
+	ScanPatterns();
 
 	while (!GetAsyncKeyState(VK_END))
 	{
