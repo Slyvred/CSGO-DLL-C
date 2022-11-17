@@ -64,7 +64,7 @@ void Init()
 	netvars.m_bSpotted = 0x93D;
 	netvars.m_bDormant = 0xED;
 	netvars.m_iTeamNum = 0xF4;
-	netvars.m_iCrosshairId = 0xB3E8;
+	netvars.m_iCrosshairId = 0x11838;
 }
 
 
